@@ -12,7 +12,6 @@ typedef enum _eType
 typedef union _Data {
 	int number;
 	char op;
-
 } ItemData;
 
 typedef struct _Item {
