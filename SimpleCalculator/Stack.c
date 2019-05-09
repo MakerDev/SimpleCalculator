@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "Stack.h"
 
@@ -13,9 +14,8 @@ void Push(Stack* stack, Data newItem)
 {
 	if (stack->top+1 >= MAX_EXP_LEN)
 	{
-		//TODO : 리눅스에서 프로그램 종료 함수로 바꿔써주기
 		printf("ERROR!! - Can't Push Anymore");
-		return;
+		exit(1);
 	}
 
 	stack->size++;
@@ -29,9 +29,8 @@ Data Pop(Stack* stack)
 
 	if (stack->top <= -1)
 	{
-		//TODO : 리눅스에서 프로그램 종료 함수로 바꿔써주기
 		printf("ERROR!! - Can't Pop Anymore");
-		exit(0);
+		exit(1);
 	}
 	
 	toReturn = stack->datas[stack->top];

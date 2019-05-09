@@ -24,13 +24,18 @@ int main()
 	따라서 -가 연산자뒤에 올때마다 부호 변수에 -1을 곱해주고 다음 Number
 	*/
 
-	while (!isEOF)
+	while (1)
 	{
-		isEOF = GetStatement(infixExpression);
+		if (isEOF = GetStatement(infixExpression))
+		{
+			break;
+		}
+
+
 
 		ConvertInfixToPostfix(infixExpression, postfixExpression);
 		PrintExpression(postfixExpression);
-		printf("결과 : %d\n", CalculatePostfix(postfixExpression));
+		printf("Result : %d\n", CalculatePostfix(postfixExpression));
 	}
 
 
