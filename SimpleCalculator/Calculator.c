@@ -4,6 +4,9 @@
 #include "Stack.h"
 #include "Calculator.h"
 
+//TODO : 전역변수 쓰지마라
+Item* VariableTable[26];
+
 int CalculateInfixExpression(const Item* infixExpression)
 {
 	Item postfixExp[MAX_EXP_LEN];
@@ -74,8 +77,9 @@ void ConvertInfixToPostfix(const Item* infixExp, Item* postfixExp)
 		}
 		else    //숫자인 경우
 		{
-			postfixExp->type = Number;
-			(postfixExp)->data.number = infixExp->data.number;
+			*postfixExp = *infixExp;
+			//postfixExp->type = Number;
+			//(postfixExp)->data.number = infixExp->data.number;
 			postfixExp++;
 		}
 

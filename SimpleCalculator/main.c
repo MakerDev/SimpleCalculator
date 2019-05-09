@@ -6,6 +6,8 @@
 #include "calc_token.h"
 
 
+void GetStatement(Item* infixexpression);
+
 
 int main()
 {
@@ -95,6 +97,7 @@ int main()
 			infixExpression[i].type = Op;
 			infixExpression[i].data.op = '\0';
 			i = -1;
+			sign = 1;
 
 			int result = CalculateInfixExpression(infixExpression);
 			printf(" 결과 : %d\n", result);
@@ -104,8 +107,26 @@ int main()
 		case EOFILE:
 			isDone = 1;
 			break;
+			
+
+		/*
+		case ASSIGN:
+			infixExpression[i].type = Op;
+			infixExpression[i].data.op = '=';
+			wasLastTokenNumberOrRParen = 0;
+
+			break;
+
+		case ALPABET:
+			infixExpression[i].type = Variable;
+			infixExpression[i].data.op = (char)number;  //number에 알파벳의 아스키 코드를 넣어 반환했다고 가정
+			wasLastTokenNumberOrRParen = 0;
+
+			break;
+		*/
 
 		default:
+			
 			break;
 		}
 
@@ -113,4 +134,12 @@ int main()
 	}
 
 	return 0;
+}
+
+
+
+//TODO : 이 함수 완성해서 쓰기
+void GetStatement(Item * infixexpression)
+{
+	//여기서 메인 안 쪽의 switch-case문 옮겨넣기
 }

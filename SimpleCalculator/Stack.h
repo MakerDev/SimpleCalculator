@@ -18,8 +18,5 @@ void Init(Stack* stack);
 void Push(Stack* stack, Data newItem);
 Data Pop(Stack* stack);
 
-
-
-
 #endif
 
