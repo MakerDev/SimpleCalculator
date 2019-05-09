@@ -23,6 +23,7 @@ int main()
 	그런데 연산자( '(' 포함) 뒤에 온 -는 부호를 결정하는 -다. 그런데 ')'다음의 -는 연산자임
 	따라서 -가 연산자뒤에 올때마다 부호 변수에 -1을 곱해주고 다음 Number
 	*/
+
 	while (!isEOF)
 	{
 		isEOF = GetStatement(infixExpression);
@@ -50,8 +51,10 @@ int GetStatement(Item* infixexpression)
 			puts("Too Long Statement");
 			return -1;
 		}
-
+		
+		
 		infixexpression[i].token = GetToken(&(infixexpression[i].value));
+
 
 		if (infixexpression[i].token == EOFILE)
 		{

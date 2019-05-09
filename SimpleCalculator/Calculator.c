@@ -6,8 +6,6 @@
 #include "Stack.h"
 #include "Calculator.h"
 
-//TODO : 전역변수 쓰지마라
-Item* VariableTable[26];
 
 int CalculateInfixExpression(const Item* infixExpression)
 {
@@ -25,12 +23,20 @@ void ConvertInfixToPostfix(const Item* infixExp, Item* postfixExp)
 
 	Init(&sOperators);
 
+	int wasLastTokenOperator = 1;
+	int sign = 1;
+
+
 	while (1)
 	{
 		if (infixExp->token == NUMBER)
 		{
 			*postfixExp = *infixExp;
+			postfixExp->value *= sign;
 			postfixExp++;
+
+			sign = 1;
+			wasLastTokenOperator = 0;
 		}
 		else
 		{
@@ -47,9 +53,25 @@ void ConvertInfixToPostfix(const Item* infixExp, Item* postfixExp)
 				break;
 
 			default:
+				if (wasLastTokenOperator && infixExp->token == MINUS)
+				{
+					sign *= -1;
+					break;
+				}
+
 				MoveOperatorsToPostfixExp(&sOperators, *infixExp, &postfixExp);
 
 				break;
+			}
+
+			if (infixExp->token == RPAREN)
+			{
+				wasLastTokenOperator = 0;
+				sign = 1;
+			}
+			else
+			{
+				wasLastTokenOperator = 1;
 			}
 		}
 
@@ -59,8 +81,6 @@ void ConvertInfixToPostfix(const Item* infixExp, Item* postfixExp)
 	*postfixExp = *infixExp;
 }
 
-
-//This Gets the pointer of postfix by getting the middle element's address not the first one.
 void MoveOperatorsToPostfixExp(Stack* stack, Item currentItem, Item** postfixExp)
 {
 	int i = 0;
