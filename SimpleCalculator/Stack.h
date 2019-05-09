@@ -3,7 +3,7 @@
 
 #include "Expression.h"
 
-typedef ItemData Data;
+typedef Item Data;
 
 typedef struct _Stack
 {

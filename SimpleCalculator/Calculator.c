@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "Expression.h"
+#include "calc_token.h"
 #include "Stack.h"
 #include "Calculator.h"
 
@@ -25,79 +27,63 @@ void ConvertInfixToPostfix(const Item* infixExp, Item* postfixExp)
 
 	while (1)
 	{
-		if (infixExp->type == Op)
-		{
-			char currentOp = infixExp->data.op;
-
-			if (currentOp == '\0')
-			{
-				break;
-			}
-
-			if (currentOp == ')')
-			{
-				//'('가 없을 경우 대비
-				while (sOperators.size > 0)
-				{
-					char top = Pop(&sOperators).op;
-
-					if (top == '(')
-					{
-						break;
-					}
-
-					postfixExp->type = Op;
-					postfixExp->data.op = top;
-					++postfixExp;
-				}
-			}
-			else if (currentOp == '(')
-			{
-				ItemData current;
-				current.op = currentOp;
-				Push(&sOperators, current);
-			}
-			else
-			{
-				int currentPriority = GetPriority(currentOp);
-
-				while (sOperators.size > 0 && GetPriority(sOperators.datas[sOperators.top].op) >= currentPriority)
-				{
-					char top = Pop(&sOperators).op;
-
-					postfixExp->type = Op;
-					postfixExp->data.op = top;
-					++postfixExp;
-				}
-
-				ItemData current;
-				current.op = currentOp;
-				Push(&sOperators, current);
-			}
-		}
-		else    //숫자인 경우
+		if (infixExp->token == NUMBER)
 		{
 			*postfixExp = *infixExp;
-			//postfixExp->type = Number;
-			//(postfixExp)->data.number = infixExp->data.number;
 			postfixExp++;
+		}
+		else
+		{
+			switch (infixExp->token)
+			{
+			case END:
+				MoveOperatorsToPostfixExp(&sOperators, *infixExp, &postfixExp);
+				*postfixExp = *infixExp;
+
+				return;
+
+			case LPAREN:
+				Push(&sOperators, *infixExp);
+				break;
+
+			default:
+				MoveOperatorsToPostfixExp(&sOperators, *infixExp, &postfixExp);
+
+				break;
+			}
 		}
 
 		infixExp++;
 	}
 
+	*postfixExp = *infixExp;
+}
 
-	while (sOperators.size > 0)
+
+//This Gets the pointer of postfix by getting the middle element's address not the first one.
+void MoveOperatorsToPostfixExp(Stack* stack, Item currentItem, Item** postfixExp)
+{
+	int i = 0;
+
+	while (stack->top > -1 && (GetPriority(stack->datas[stack->top].token, 1) >= GetPriority(currentItem.token, 0)))
 	{
-		char top = Pop(&sOperators).op;
 
-		postfixExp->type = Op;
-		postfixExp->data.op = top;
-		++postfixExp;
+		Item data = Pop(stack);
+
+		//current가 RPAREN일때만 성립하고, 이 경우 LPAREN은 제거되어야 함.
+		if (data.token == LPAREN)
+		{
+			break;
+		}
+
+		**postfixExp = data;
+		(*postfixExp)++;
 	}
 
-	postfixExp->type = Op;
-	postfixExp->data.op = '\0';
+	if (currentItem.token != RPAREN)
+	{
+		Push(stack, currentItem);
+	}
 }
 
 
@@ -105,81 +91,98 @@ void ConvertInfixToPostfix(const Item* infixExp, Item* postfixExp)
 int CalculatePostfix(const Item* postfixExpression)
 {
 	Stack sNumbers;
-	ItemData numToPush;
+	Data dataToPush;
 
+	int num1, num2;
 	Init(&sNumbers);
 
-	while (1)
+	while (postfixExpression->token != END)
 	{
-		if (postfixExpression->type == Op && postfixExpression->data.op == '\0')
-			break;
-
-		if (postfixExpression->type == Number)
+		if (postfixExpression->token == NUMBER)
 		{
-			numToPush.number = postfixExpression->data.number;
-			Push(&sNumbers, numToPush);
+			Push(&sNumbers, *postfixExpression);
 		}
 		else
 		{
-			int num1 = Pop(&sNumbers).number;
-			int num2 = Pop(&sNumbers).number;
+			num1 = Pop(&sNumbers).value;
+			num2 = Pop(&sNumbers).value;
 
-			switch (postfixExpression->data.op)
+			switch (postfixExpression->token)
 			{
-			case '+':
-				numToPush.number = num2 + num1;
-				Push(&sNumbers, numToPush);
+			case PLUS:
+				dataToPush.value = num2 + num1;
+
+				Push(&sNumbers, dataToPush);
+
 				break;
 
-			case '-':
-				numToPush.number = num2 - num1;
-				Push(&sNumbers, numToPush);
+			case MINUS:
+				dataToPush.value = num2 - num1;
+
+				Push(&sNumbers, dataToPush);
+
 				break;
 
-			case '*':
-				numToPush.number = num2 * num1;
-				Push(&sNumbers, numToPush);
+			case TIMES:
+				dataToPush.value = num2 * num1;
+
+				Push(&sNumbers, dataToPush);
+
 				break;
 
-			case '/':
-				numToPush.number = num2 / num1;
-				Push(&sNumbers, numToPush);
+			case DIVIDE:
+				dataToPush.value = num2 / num1;
+
+				Push(&sNumbers, dataToPush);
+
 				break;
+
 
 			default:
 				break;
 			}
 		}
 
+
 		postfixExpression++;
 	}
 
-	return Pop(&sNumbers).number;
+	return Pop(&sNumbers).value;
+
 }
 
-
-int GetPriority(char op)
+//스택에 있는 연산자의 우선순위인지 새로 추가하려는 연산자의 우선순위인지
+int GetPriority(CalcToken token, int isInStack)
 {
 	int priority = 0;
 
-	switch (op)
+	switch (token)
 	{
-	case '(':	//스택에 들어간 뒤에는 가장 우선 순위가 낮은 것으로 취급됨.
+	case END:
+		priority = -1;
+		break;
+
+	case RPAREN:
 		priority = 0;
 		break;
 
-	case '+':
-	case '-':
+	case LPAREN:	//스택에 들어간 뒤에는 가장 우선 순위가 낮은 것으로 취급됨.
+
 		priority = 1;
+
 		break;
 
-	case '*':
-	case '/':
+	case PLUS:
+	case MINUS:
 		priority = 2;
 		break;
 
+	case TIMES:
+	case DIVIDE:
+		priority = 3;
+		break;
+
 	default:
-		priority = -1;
 		break;
 	}
 
@@ -191,20 +194,46 @@ void PrintExpression(const Item* exp)
 {
 	while (1)
 	{
-		if (exp->type == Op)
-		{
-			if (exp->data.op == '\0')
-			{
-				printf("\n");
-				return;
-			}
 
-			printf("%c", exp->data.op);
-		}
-		else
+		switch (exp->token)
 		{
-			printf("%d", exp->data.number);
+		case NUMBER:
+			printf("%d ", exp->value);
+			break;
+
+		case PLUS:
+			printf("+ ");
+			break;
+
+		case MINUS:
+			printf("- ");
+			break;
+
+		case TIMES:
+			printf("* ");
+			break;
+
+		case DIVIDE:
+			printf("/ ");
+			break;
+
+		case LPAREN:
+			printf("( ");
+			break;
+
+		case RPAREN:
+			printf(") ");
+			break;
+
+		case END:
+			printf("\n");
+			return;
+
+		default:
+			break;
 		}
+
+
 
 		exp++;
 	}
