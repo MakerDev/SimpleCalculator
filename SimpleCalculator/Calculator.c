@@ -85,7 +85,7 @@ void MoveOperatorsToPostfixExp(Stack* stack, Item currentItem, Item** postfixExp
 {
 	int i = 0;
 
-	while (stack->top > -1 && (GetPriority(stack->datas[stack->top].token, 1) >= GetPriority(currentItem.token, 0)))
+	while (stack->top > -1 && (GetPriority(stack->datas[stack->top].token) >= GetPriority(currentItem.token)))
 	{
 
 		Item data = Pop(stack);
@@ -105,7 +105,6 @@ void MoveOperatorsToPostfixExp(Stack* stack, Item currentItem, Item** postfixExp
 		Push(stack, currentItem);
 	}
 }
-
 
 
 int CalculatePostfix(const Item* postfixExpression)
@@ -172,7 +171,7 @@ int CalculatePostfix(const Item* postfixExpression)
 }
 
 //스택에 있는 연산자의 우선순위인지 새로 추가하려는 연산자의 우선순위인지
-int GetPriority(CalcToken token, int isInStack)
+int GetPriority(CalcToken token)
 {
 	int priority = 0;
 

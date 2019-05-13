@@ -6,7 +6,7 @@
 int CalculateInfixExpression(const Item* infixExpression);  //그냥 infix를 넣으면 바로 결과 주는 함수
 void ConvertInfixToPostfix(const Item* infixExp, Item* postfixExp);
 int CalculatePostfix(const Item* postfixExpression);
-int GetPriority(CalcToken token, int isInStack);
+int GetPriority(CalcToken token);
 void PrintExpression(const Item* exp);
 void MoveOperatorsToPostfixExp(Stack* stack, Item currentItem, Item** postfixExp);
 
