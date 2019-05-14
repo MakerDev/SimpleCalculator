@@ -29,6 +29,7 @@
     <ClInclude Include="calc_token.h" />
     <ClInclude Include="Expression.h" />
     <ClInclude Include="Stack.h" />
+    <ClInclude Include="TableManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
