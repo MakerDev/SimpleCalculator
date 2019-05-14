@@ -1,7 +1,7 @@
 #ifndef _TABLE_MANAGER_H_
 #define _TABLE_MANAGER_H_
 
-#include "Expression.h"
+#include "Statement.h"
 
 #define SIZE_OF_TABLE 26
 #define MAX_SIZE_OF_FUNC 50

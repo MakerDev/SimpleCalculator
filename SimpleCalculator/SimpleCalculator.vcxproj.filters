@@ -27,6 +27,9 @@
     <ClCompile Include="Calculator.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TableManager.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stack.h">
@@ -35,13 +38,13 @@
     <ClInclude Include="calc_token.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Expression.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Calculator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TableManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

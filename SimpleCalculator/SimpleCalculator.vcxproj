@@ -23,11 +23,12 @@
     <ClCompile Include="calc_token.c" />
     <ClCompile Include="Stack.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="TableManager.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Calculator.h" />
     <ClInclude Include="calc_token.h" />
-    <ClInclude Include="Expression.h" />
+    <ClInclude Include="Statement.h" />
     <ClInclude Include="Stack.h" />
     <ClInclude Include="TableManager.h" />
   </ItemGroup>

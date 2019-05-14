@@ -1,15 +1,14 @@
 #include <stdio.h>
 
 #include "Calculator.h"
-#include "Expression.h"
-
-
+#include "Statement.h"
 
 int main()
 {
 	StatementType tyepOfStatement;
 	int number = 0;
 	int result;
+
 	Item infixStatement[MAX_EXP_LEN];
 
 	while (1)
